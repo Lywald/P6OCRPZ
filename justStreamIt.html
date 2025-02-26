@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JustStreamIt</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <img src="logo.png" alt="JustStreamIt Logo">
+        </nav>
+    </header>
+
+    <main>
+        <!-- Meilleur film -->
+        <section>
+            <h2>Meilleur film</h2>
+            <div class="featured-movie">
+                <img src="the-big-lebowski.jpg" alt="The Big Lebowski">
+                <h3>The Big Lebowski</h3>
+                <p>Jeff "The Dude" Lebowski, mistaken for a millionaire of the same name, seeks restitution for a ruined rug and enlists his bowling buddies to help get it.</p>
+                <button class="details">Détails</button>
+            </div>
+        </section>
+
+        <!-- Films les mieux notés -->
+        <section>
+            <h2>Films les mieux notés</h2>
+            <div class="movies-grid">
+                <article>
+                    <img src="titanic.jpg" alt="Titanic">
+                    <h3>Titanic</h3>
+                </article>
+                <article>
+                    <img src="retour-vers-le-futur.jpg" alt="Retour vers le futur">
+                    <h3>Retour vers le futur</h3>
+                </article>
+                <article>
+                    <img src="scarface.jpg" alt="Scarface">
+                    <h3>Scarface</h3>
+                </article>
+                <article>
+                    <img src="pulp-fiction.jpg" alt="Pulp Fiction">
+                    <h3>Pulp Fiction</h3>
+                </article>
+                <article>
+                    <img src="le-parrain.jpg" alt="Le Parrain">
+                    <h3>Le Parrain</h3>
+                </article>
+                <article>
+                    <img src="alien.jpg" alt="Alien">
+                    <h3>Alien</h3>
+                </article>
+            </div>
+            <button>Voir au-dessus</button>
+        </section>
+
+        <!-- Catégorie 2 -->
+        <section>
+            <h2>Catégorie 2</h2>
+            <div class="movies-grid">
+                <!-- Similar structure for category 2 movies -->
+            </div>
+            <button>Voir au-dessus</button>
+        </section>
+
+        <!-- Catégorie 3 -->
+        <section>
+            <h2>Catégorie 3</h2>
+            <div class="movies-grid">
+                <!-- Similar structure for category 3 movies -->
+            </div>
+            <button>Voir au-dessus</button>
+        </section>
+
+        <!-- Catégorie libre -->
+        <section>
+            <h2>Autres:</h2>
+            <form>
+                <select name="category">
+                    <option value="action">Films d'action</option>
+                    <option value="comedy" selected>Comédies</option>
+                    <option value="family">Famille</option>
+                    <option value="fantasy">Films de fantasy</option>
+                    <option value="horror">Films d'horreur</option>
+                    <option value="scifi">Science-fiction</option>
+                    <option value="western">Westerns</option>
+                </select>
+            </form>
+            <div class="movies-grid">
+                <!-- Movies will be loaded here based on selection -->
+            </div>
+            <button>Voir au-dessus</button>
+        </section>
+    </main>
+
+    <!-- Modal for movie details -->
+    <div id="movie-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Movie Details</h2>
+            <p id="modal-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
