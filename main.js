@@ -202,20 +202,114 @@ async function fetchCategory2() {
     }
 }
 
+// Function to check viewport width and log button visibility
+function checkViewportAndButtons() {
+  const viewportWidth = window.innerWidth;
+  const buttons = document.querySelectorAll('.voir-plus-btn');
+  
+  console.log(`Viewport width: ${viewportWidth}px`);
+  console.log(`Found ${buttons.length} "Voir plus" buttons`);
+  
+  buttons.forEach((button, index) => {
+    const computedStyle = window.getComputedStyle(button);
+    console.log(`Button ${index} display: ${computedStyle.display}`);
+    
+    // Force display if we're in tablet mode
+    if (viewportWidth <= 768) {
+      button.style.display = 'block';
+      console.log(`Forced display for button ${index}`);
+    }
+  });
+}
+
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
     fetchBestMovie();
     fetchNextBestMovies();
     fetchCategory1();
     fetchCategory2();
+    
+    // Initialize modal
+    initializeModal();
+    
+    // Initialize "Voir plus" buttons
+    initializeVoirPlusButtons();
+    
+    // Check viewport and buttons
+    checkViewportAndButtons();
 });
 
-// Function to show movie details (to be implemented later for modal)
+// Listen for window resize events
+window.addEventListener('resize', checkViewportAndButtons);
+
+// Function to handle the "Voir plus" buttons
+function initializeVoirPlusButtons() {
+    const voirPlusButtons = document.querySelectorAll('.voir-plus-btn');
+    
+    voirPlusButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Find the parent section and its movies-grid
+            const section = this.closest('section');
+            const moviesGrid = section.querySelector('.movies-grid');
+            
+            // Toggle the class to show all movies
+            moviesGrid.classList.toggle('show-all-movies');
+            
+            // Update button text based on viewport width
+            const isMobile = window.innerWidth <= 480;
+            const currentText = moviesGrid.classList.contains('show-all-movies');
+            
+            // Use appropriate wording
+            if (currentText) {
+                this.textContent = 'Voir moins';
+            } else {
+                this.textContent = 'Voir plus';
+            }
+            
+            // Log for debugging
+            console.log(`Button clicked: ${isMobile ? 'mobile' : 'tablet'} view, now ${currentText ? 'showing' : 'hiding'} additional movies`);
+        });
+    });
+}
+
+// Function to initialize modal functionality
+function initializeModal() {
+    // Get the modal
+    var modal = document.getElementById("movie-modal");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close-button")[0];
+    
+    // Function to close the modal
+    function closeModal() {
+        console.log("Closing modal");
+        modal.classList.remove("show");
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = closeModal;
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+}
+
+// Function to show movie details and open modal
 function showMovieDetails(movieId) {
     console.log('Show details for movie:', movieId);
-    openModal();
-    //alert('Détails du film à afficher');
-    // This will be implemented later when we add the modal functionality
+    
+    // Get the modal
+    var modal = document.getElementById("movie-modal");
+    
+    // Open the modal
+    modal.classList.add("show");
+    
+    // Set placeholder text (in a real app, you would fetch the movie details)
+    document.getElementById("modal-text").innerText = 
+        "Détails du film ID: " + movieId + "\nLorem ipsum dolor sit amet, consectetur adipiscing elit.";
 }
 
 // Get the modal

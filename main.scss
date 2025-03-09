@@ -1,0 +1,158 @@
+// Variables
+$primary-color: #333;
+$accent-color: #f00;
+$text-color: #000;
+$light-color: white;
+$container-width: 800px;
+$section-spacing: 1rem;
+$border-radius: 25px;
+
+// Breakpoints
+$tablet-width: 768px;
+$mobile-width: 480px;
+
+// Basic reset and container styling
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  display: flex;
+  justify-content: center; // Center content horizontally
+}
+
+body {
+  font-family: Arial, sans-serif;
+  max-width: $container-width;
+  width: 100%; 
+  margin: 0; // Remove vertical margins
+  padding: 0; // Remove default padding
+  overflow-x: hidden; // Prevent horizontal scrolling
+}
+
+// Header styling
+header {
+  padding: $section-spacing;
+  background-color: $primary-color;
+  color: $light-color;
+  width: 100%;
+  
+  img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    width: auto;
+  }
+}
+
+// Section headers
+h2 {
+  font-size: 2.5rem;
+  margin: 2rem 0 1rem 2rem;
+}
+
+// Featured movie section
+.featured-movie {
+  position: relative;
+  display: flex;
+  max-width: $container-width;
+  margin: 0 auto;
+  padding: 2 * $section-spacing;
+  border: 1px solid $text-color;
+  min-height: 300px;
+  
+  img {
+    width: 220px;
+    height: auto;
+  }
+  
+  h3 {
+    position: absolute;
+    top: 2 * $section-spacing;
+    left: 260px;
+    font-size: 2rem;
+    margin-left: 32px;
+  }
+  
+  p {
+    position: absolute;
+    top: 5rem;
+    left: 292px;
+    font-size: 1rem;
+    line-height: 1.4;
+    max-width: 600px;
+  }
+  
+  button {
+    position: absolute;
+    bottom: 2 * $section-spacing;
+    right: 2 * $section-spacing;
+    background-color: $accent-color;
+    color: $light-color;
+    border: none;
+    padding: 0.6rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: $border-radius;
+  }
+}
+
+// Movie grid flex container
+.movies-grid {
+  display: grid; // Changed to grid instead of flex
+  grid-template-columns: repeat(3, 1fr); // 3 columns of equal width
+  grid-gap: $section-spacing; // Gap between grid items
+  padding: $section-spacing;
+  margin: 0 auto;
+  text-align: center;
+  
+  article {
+    margin-bottom: $section-spacing;
+    
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    h3 {
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+// Section spacing
+section {
+  margin: $section-spacing 0;
+  width: 100%; // Ensure sections take full width
+}
+
+// Responsive adjustments
+@media (max-width: $tablet-width) {
+  .movies-grid {
+    &:nth-of-type(1) {
+      grid-template-columns: repeat(4, 1fr); // Show 4 movies in the first grid
+    }
+    &:nth-of-type(2),
+    &:nth-of-type(3) {
+      grid-template-columns: repeat(6, 1fr); // Show 6 movies in the second and third grids
+    }
+  }
+
+  .featured-movie {
+    padding: 1.5 * $section-spacing;
+    
+    h3, p, button {
+      position: static;
+      margin: $section-spacing 0;
+    }
+  }
+}
+
+@media (max-width: $mobile-width) {
+  .movies-grid {
+    grid-template-columns: 1fr; // Change to 1 column on mobile
+  }
+}
