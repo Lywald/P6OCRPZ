@@ -324,37 +324,52 @@ async function showMovieDetails(movieId) {
         const response = await fetch(`${API_BASE_URL}/titles/${movieId}`);
         const movie = await response.json();
         
-        // Format the date for display
-        const releaseDate = movie.date_published ? new Date(movie.date_published).toLocaleDateString('fr-FR') : 'Non disponible';
+        // Format movie information according to the specified format
+        const formattedInfo = [
+            // Line 1: Year - Genres
+            `${movie.year} - ${movie.genres.join(', ')}`,
+            
+            // Line 2: Rating - Duration minutes (Countries)
+            `${movie.rated || 'Not rated'} - ${movie.duration} minutes (${movie.countries.join(' / ')})`,
+            
+            // Line 3: IMDB score
+            `IMDB score: ${movie.imdb_score}/10`,
+            
+            // Line 4: Box office in French
+            `Recettes au box-office: ${movie.worldwide_gross_income ? '$' + movie.worldwide_gross_income.toLocaleString() + 'm' : 'Non disponible'}`
+        ];
         
-        // Build modal content
+        // Build modal content with new structure - including two copies of the image
         modalContent.innerHTML = `
             <div class="modal-header">
-                <h2>Détails du film</h2>
                 <span class="close-button">&times;</span>
             </div>
             <div class="modal-body">
-                <div class="modal-details">
-                    <h3 class="movie-title">${movie.title}</h3>
-                    <div class="movie-metadata">
-                        <div><strong>Genre:</strong> ${movie.genres.join(', ')}</div>
-                        <div><strong>Année:</strong> ${movie.year}</div>
-                        <div><strong>Score:</strong> ${movie.imdb_score}/10</div>
-                        <div><strong>Rated:</strong> ${movie.rated || 'Non classé'}</div>
+                <div class="modal-top">
+                    <div class="modal-image desktop-image">
+                        <img src="${movie.image_url}" alt="${movie.title}" onerror="this.src='nopic.png';">
                     </div>
-                    <div class="movie-metadata">
-                        <div><strong>Réalisateur:</strong> ${movie.directors.join(', ')}</div>
-                        <div><strong>Durée:</strong> ${movie.duration} min</div>
-                        <div><strong>Pays:</strong> ${movie.countries.join(', ')}</div>
+                    <div class="modal-title-details">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <div class="movie-metadata">
+                            ${formattedInfo.map(info => `<div>${info}</div>`).join('')}
+                            <br/>
+                            <div class="director-label">Réalisé par:</div>
+                            <div class="director-names">${movie.directors.join(', ')}</div>
+                        </div>
                     </div>
-                    <div class="movie-metadata">
-                        <div><strong>Box Office:</strong> ${movie.worldwide_gross_income ? '$' + movie.worldwide_gross_income.toLocaleString() : 'Non disponible'}</div>
-                        <div><strong>Acteurs:</strong> ${movie.actors.join(', ')}</div>
-                    </div>
-                    <p class="movie-description">${movie.long_description || movie.description}</p>
                 </div>
-                <div class="modal-image">
-                    <img src="${movie.image_url}" alt="${movie.title}" onerror="this.src='nopic.png';">
+                <div class="modal-details">
+                    <p class="movie-description">${movie.long_description || movie.description}</p>
+                    
+                    <!-- Mobile image - between description and actors -->
+                    <div class="modal-image mobile-image">
+                        <img src="${movie.image_url}" alt="${movie.title}" onerror="this.src='nopic.png';">
+                    </div>
+                    
+                    <div class="movie-actors">
+                        <strong>Acteurs:</strong> ${movie.actors.join(', ')}
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

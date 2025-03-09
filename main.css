@@ -206,26 +206,27 @@ section {
   to { opacity: 1; }
 }
 
-/* Modal Content Box */
+/* Modal Content Box - improved mobile responsiveness */
 .modal-content {
   background-color: #fefefe;
-  margin: 10% auto;
+  margin: 5% auto; /* Reduced from 10% to 5% to show more content */
   padding: 0;
   border-radius: 8px;
-  width: 90%;
+  width: 95%; /* Increased from 90% to 95% for mobile */
   max-width: 700px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   position: relative;
   overflow: hidden;
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
 }
 
-/* Modal Header */
+/* Modal Header - improved for mobile */
 .modal-header {
-  background-color: #333;
+  background-color: #fff;
   color: white;
   padding: 15px 20px;
   position: relative;
-  border-bottom: 1px solid #ddd;
+  /*border-bottom: 1px solid #ddd;*/
 }
 
 .modal-header h2 {
@@ -235,7 +236,10 @@ section {
 
 /* Modal Body */
 .modal-body {
-  padding: 20px;
+  padding: 15px; /* Reduced padding on mobile */
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
   display: flex;
   flex-direction: column-reverse; /* Reverse order on mobile */
 }
@@ -284,27 +288,54 @@ section {
   order: 1; /* Force to left side */
 }
 
+/* Modal Footer - updated for centered button */
 .modal-footer {
-  text-align: right;
+  text-align: center; /* Changed from 'right' to 'center' */
   border-top: 1px solid #ddd;
   background-color: #f5f5f5;
   padding: 15px 20px;
 }
 
+/* Close button - hidden on desktop by default */
 .close-button {
   position: absolute;
-  top: 15px;
+  top: 10px;
   right: 15px;
-  color: white;
+  color: #bbb;
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.2s, transform 0.2s;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  display: none; /* Hide on desktop */
+}
+
+/* Mobile-specific close button styling */
+@media (max-width: 768px) {
+  .close-button {
+    top: 5px;
+    right: 10px;
+    color: #ff0000; /* Red color on mobile */
+    font-size: 40px; /* Larger size on mobile */
+    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    background-color: rgba(255,255,255,0.8); /* Semi-transparent background */
+    border-radius: 50%; /* Circular background */
+    /*box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Subtle shadow */
+    z-index: 1100; /* Ensure it's above other content */
+    display: block; /* Show on mobile */
+  }
 }
 
 .close-button:hover,
 .close-button:focus {
   color: #f00;
+  transform: scale(1.1); /* Slight grow effect on hover */
 }
 
 /* The "Voir plus" button */
@@ -344,4 +375,210 @@ section {
 .movie-description {
   line-height: 1.5;
   margin-bottom: 15px;
+}
+
+/* Modal styles update */
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Top section with image and title */
+.modal-top {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+/* Image container */
+.modal-image {
+  flex: 0 0 250px; /* Fixed width */
+  margin-right: 20px;
+}
+
+.modal-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+/* Title and metadata section */
+.modal-title-details {
+  flex: 1;
+}
+
+.movie-title {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.8em;
+}
+
+/* Update movie metadata styling for bold black text */
+.movie-metadata {
+  display: flex;
+  flex-direction: column;
+  gap: 1px; /* Reduced from 4px to 1px */
+  margin-bottom: 10px; /* Reduced from 15px to 10px */
+}
+
+.movie-metadata > div {
+  color: #000;         /* Changed from #666 to black */
+  font-size: 1rem;
+  line-height: 1.2; /* Reduced from 1.4 to 1.2 */
+  font-weight: bold;   /* Make all metadata bold */
+  margin-bottom: 2px; /* Reduced from 5px to 2px */
+}
+
+/* First item (year) should still be bold but can be larger */
+.movie-metadata > div:first-child {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Director styling - not bold */
+.director-names {
+  font-weight: normal !important;  /* Override the bold style */
+  padding-left: 0px;              /* Indent to show it's under the label */
+  margin-top: 0; /* Reduced from -2px to 0 */
+}
+
+/* Keep director label bold */
+.director-label {
+  margin-bottom: 0;                /* Reduce space before director names */
+}
+
+/* Movie description and actors */
+.modal-details {
+  margin-top: 10px;
+}
+
+.movie-description {
+  line-height: 1.4; /* Reduced from 1.6 to 1.4 */
+  margin-bottom: 15px;
+}
+
+.movie-actors {
+  font-style: italic;
+  margin-top: 15px;
+}
+
+/* Mobile responsive layout */
+@media (max-width: 768px) {
+  .modal-top {
+    flex-direction: column;
+  }
+  
+  .modal-image {
+    flex: 0 0 auto;
+    margin-right: 0;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .modal-image img {
+    max-width: 100%;
+    width: auto;
+    max-height: 300px;
+  }
+  
+  .movie-metadata {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Close button styling */
+.close-btn {
+  background-color: #f00; /* Red background */
+  color: white;          /* White text */
+  border: none;          /* No border */
+  border-radius: 25px;   /* Rounded corners */
+  padding: 0.6rem 2rem;  /* Padding for size */
+  font-size: 1rem;       /* Font size */
+  cursor: pointer;       /* Hand cursor on hover */
+  transition: background-color 0.3s; /* Smooth transition */
+  margin: 0 auto;        /* Center horizontally with auto margins */
+  min-width: 150px;      /* Consistent minimum width */
+}
+
+.close-btn:hover {
+  background-color: #d00; /* Darker red on hover */
+}
+
+/* Desktop vs mobile image handling */
+.mobile-image {
+  display: none; /* Hidden by default (on desktop) */
+  margin: 20px 0; /* Space above and below on mobile */
+  text-align: center;
+}
+
+.mobile-image img {
+  max-width: 250px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Responsive layout adjustments */
+@media (max-width: 768px) {
+  .modal-top {
+    flex-direction: column;
+  }
+  
+  /* Hide desktop image on mobile */
+  .desktop-image {
+    display: none;
+  }
+  
+  /* Show mobile image on mobile */
+  .mobile-image {
+    display: block;
+    margin: 20px auto;
+  }
+  
+  .modal-image {
+    flex: 0 0 auto;
+    margin-right: 0;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .modal-image img {
+    max-width: 100%;
+    width: auto;
+    max-height: 300px;
+  }
+  
+  .movie-metadata {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    width: 95%;
+    margin: 5% auto;
+    max-height: 90vh; /* Limit height to prevent overflow */
+    overflow-y: auto; /* Allow vertical scrolling if needed */
+  }
+  
+  .modal-body {
+    padding: 10px;
+  }
+  
+  /* Adjust typography for mobile */
+  .movie-title {
+    font-size: 1.6em;
+  }
+  
+  .movie-metadata > div {
+    font-size: 0.95rem;
+    margin-right: 0;
+    width: 100%; /* Ensure metadata items take full width */
+  }
+  
+  /* Ensure the movie description doesn't overflow */
+  .movie-description {
+    width: 100%;
+    word-break: break-word; /* Allow words to break if needed */
+  }
 }
