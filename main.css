@@ -8,6 +8,9 @@
 html {
   display: flex;
   justify-content: center;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 body {
@@ -83,6 +86,18 @@ h2 {
   border-radius: 25px;
 }
 
+/* Basic button styling for all movie buttons */
+.featured-movie button, .movies-grid article button {
+  background-color: #f00;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  height: 40px; /* Fixed height for all buttons */
+  cursor: pointer;
+  display: block; /* Ensure it's always visible */
+  margin: 0.5rem auto;
+}
+
 .movies-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -106,6 +121,13 @@ h2 {
   margin-top: 0.5rem;
 }
 
+.movies-grid article button {
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  width: 80%;
+  max-width: 120px;
+}
+
 section {
   margin: 1rem 0;
   width: 100%;
@@ -123,6 +145,10 @@ section {
 
   .featured-movie {
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
   .featured-movie h3,
@@ -160,6 +186,102 @@ section {
   .show-all-movies article:nth-child(n+5) {
     display: block;
   }
+
+  /* Fix oversized button in featured movie section */
+  .featured-movie button {
+    padding: 0.4rem 1.2rem;
+    font-size: 0.9rem;
+    width: auto;
+    max-width: 120px;
+    margin-top: 0.5rem;
+  }
+  
+  /* Fix horizontal scrolling issues */
+  section {
+    width: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  /* Ensure grid items don't cause overflow */
+  .movies-grid {
+    padding: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .movies-grid article {
+    width: 100%;
+  }
+  
+  /* Make details buttons smaller in grid */
+  .movies-grid article button {
+    font-size: 0.8rem;
+    padding: 0.4rem 1rem;
+    width: 80%;
+    margin: 0.5rem auto;
+    display: block !important; /* Force display */
+    height: 36px; /* Slightly smaller on tablet */
+    line-height: normal;
+    min-height: 36px; /* Set minimum height */
+    max-height: 36px; /* Set maximum height */
+    width: auto;
+    max-width: 100px;
+    margin: 10px auto;
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+    overflow: visible;
+    box-sizing: border-box;
+  }
+  
+  .featured-movie button {
+    height: 40px;
+    max-height: 40px;
+    min-height: 40px;
+    line-height: normal;
+    display: block !important;
+    width: auto;
+    max-width: 120px;
+  }
+
+  /* Improved featured movie layout for mobile */
+  .featured-movie img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin: 0 auto 1rem;
+    order: 1; /* First element in the flex container */
+  }
+
+  .featured-movie h3 {
+    position: static;
+    margin: 0 0 1rem 0;
+    width: 100%;
+    font-size: 1.8rem;
+    order: 2; /* Second element */
+  }
+
+  .featured-movie p {
+    position: static;
+    margin: 0 0 1.5rem 0;
+    max-width: 100%;
+    width: 100%;
+    order: 3; /* Third element */
+  }
+
+  .featured-movie button {
+    position: static;
+    margin: 0 auto;
+    order: 4; /* Fourth element */
+    padding: 0.4rem 1.2rem;
+    font-size: 0.9rem;
+    height: 40px;
+    max-height: 40px;
+    min-height: 40px;
+    width: 120px;
+    max-width: 120px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -178,6 +300,56 @@ section {
 
   .show-all-movies article:nth-child(n+3) {
     display: block;
+  }
+
+  .featured-movie button {
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+    max-width: 100px;
+  }
+  
+  .featured-movie {
+    padding: 1rem 0.5rem;
+  }
+  
+  /* Ensure all content is properly contained */
+  .modal-content, .featured-movie, .movies-grid {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  /* Further adjustments for mobile */
+  .movies-grid article button {
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.8rem;
+    max-width: 90px;
+  }
+  
+  .featured-movie button {
+    height: 36px;
+    max-height: 36px;
+    min-height: 36px;
+  }
+
+  /* Further adjustments for smaller screens */
+  .featured-movie img {
+    max-width: 250px;
+  }
+  
+  .featured-movie h3 {
+    font-size: 1.5rem;
+  }
+  
+  .featured-movie button {
+    height: 36px;
+    max-height: 36px;
+    min-height: 36px;
+    font-size: 0.8rem;
+    max-width: 100px;
   }
 }
 
