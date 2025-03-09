@@ -235,6 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize "Voir plus" buttons
     initializeVoirPlusButtons();
     
+    // Initialize category selection
+    initializeCategorySelection();
+    
     // Check viewport and buttons
     checkViewportAndButtons();
 });
@@ -298,18 +301,121 @@ function initializeModal() {
 }
 
 // Function to show movie details and open modal
-function showMovieDetails(movieId) {
+async function showMovieDetails(movieId) {
     console.log('Show details for movie:', movieId);
     
-    // Get the modal
-    var modal = document.getElementById("movie-modal");
+    try {
+        // Get the modal
+        const modal = document.getElementById("movie-modal");
+        const modalContent = modal.querySelector('.modal-content');
+        
+        // Show loading state
+        modalContent.innerHTML = `
+            <div class="modal-header">
+                <h2>Chargement...</h2>
+                <span class="close-button">&times;</span>
+            </div>
+        `;
+        
+        // Open the modal
+        modal.classList.add("show");
+        
+        // Fetch movie details
+        const response = await fetch(`${API_BASE_URL}/titles/${movieId}`);
+        const movie = await response.json();
+        
+        // Format the date for display
+        const releaseDate = movie.date_published ? new Date(movie.date_published).toLocaleDateString('fr-FR') : 'Non disponible';
+        
+        // Build modal content
+        modalContent.innerHTML = `
+            <div class="modal-header">
+                <h2>Détails du film</h2>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="modal-details">
+                    <h3 class="movie-title">${movie.title}</h3>
+                    <div class="movie-metadata">
+                        <div><strong>Genre:</strong> ${movie.genres.join(', ')}</div>
+                        <div><strong>Année:</strong> ${movie.year}</div>
+                        <div><strong>Score:</strong> ${movie.imdb_score}/10</div>
+                        <div><strong>Rated:</strong> ${movie.rated || 'Non classé'}</div>
+                    </div>
+                    <div class="movie-metadata">
+                        <div><strong>Réalisateur:</strong> ${movie.directors.join(', ')}</div>
+                        <div><strong>Durée:</strong> ${movie.duration} min</div>
+                        <div><strong>Pays:</strong> ${movie.countries.join(', ')}</div>
+                    </div>
+                    <div class="movie-metadata">
+                        <div><strong>Box Office:</strong> ${movie.worldwide_gross_income ? '$' + movie.worldwide_gross_income.toLocaleString() : 'Non disponible'}</div>
+                        <div><strong>Acteurs:</strong> ${movie.actors.join(', ')}</div>
+                    </div>
+                    <p class="movie-description">${movie.long_description || movie.description}</p>
+                </div>
+                <div class="modal-image">
+                    <img src="${movie.image_url}" alt="${movie.title}" onerror="this.src='nopic.png';">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="close-btn">Fermer</button>
+            </div>
+        `;
+        
+        // Re-attach event handlers
+        attachModalEventHandlers();
+        
+    } catch (error) {
+        console.error('Error fetching movie details:', error);
+        
+        // Show error in modal
+        const modal = document.getElementById("movie-modal");
+        const modalContent = modal.querySelector('.modal-content');
+        
+        modalContent.innerHTML = `
+            <div class="modal-header">
+                <h2>Erreur</h2>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Impossible de charger les détails du film.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="close-btn">Fermer</button>
+            </div>
+        `;
+        
+        // Re-attach event handlers
+        attachModalEventHandlers();
+    }
+}
+
+// Function to attach event handlers to modal elements
+function attachModalEventHandlers() {
+    const modal = document.getElementById("movie-modal");
+    const closeButton = modal.querySelector('.close-button');
+    const closeBtn = modal.querySelector('.close-btn');
     
-    // Open the modal
-    modal.classList.add("show");
+    // When the user clicks on <span> (x), close the modal
+    if (closeButton) {
+        closeButton.onclick = function() {
+            modal.classList.remove("show");
+        };
+    }
     
-    // Set placeholder text (in a real app, you would fetch the movie details)
-    document.getElementById("modal-text").innerText = 
-        "Détails du film ID: " + movieId + "\nLorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    // When the user clicks on the close button, close the modal
+    if (closeBtn) {
+        closeBtn.onclick = function() {
+            modal.classList.remove("show");
+        };
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.classList.remove("show");
+        }
+    };
 }
 
 // Get the modal
@@ -354,4 +460,102 @@ window.onclick = function(event) {
   if (event.target == modal) {
     closeModal();
   }
+}
+
+// Function to handle dropdown category selection
+function initializeCategorySelection() {
+    const categorySelect = document.querySelector('select[name="category"]');
+    const categorySection = document.querySelector('section:nth-of-type(5)');
+    const categoryGrid = categorySection.querySelector('.movies-grid');
+    
+    // Make sure the "Voir plus" button exists
+    let voirPlusBtn = categorySection.querySelector('.voir-plus-btn');
+    if (!voirPlusBtn) {
+        voirPlusBtn = document.createElement('button');
+        voirPlusBtn.className = 'voir-plus-btn';
+        voirPlusBtn.textContent = 'Voir plus';
+        // Insert the button before any existing buttons or at the end if none
+        categoryGrid.insertAdjacentElement('afterend', voirPlusBtn);
+    }
+    
+    // Initial load - default to comedy
+    displayCustomCategory('comedy');
+    
+    // Add change event listener
+    categorySelect.addEventListener('change', function() {
+        const selectedCategory = this.value;
+        displayCustomCategory(selectedCategory);
+    });
+    
+    // Add functionality to the "Voir plus" button
+    voirPlusBtn.addEventListener('click', function() {
+        categoryGrid.classList.toggle('show-all-movies');
+        this.textContent = categoryGrid.classList.contains('show-all-movies') ? 'Voir moins' : 'Voir plus';
+    });
+}
+
+// Function to fetch and display custom category movies
+async function displayCustomCategory(category) {
+    try {
+        const categorySection = document.querySelector('section:nth-of-type(5)');
+        const moviesGrid = categorySection.querySelector('.movies-grid');
+        const title = categorySection.querySelector('h2');
+        
+        // Update the title to show which category is displayed
+        title.textContent = `Catégorie: ${getCategoryDisplayName(category)}`;
+        
+        // Show loading indicator
+        moviesGrid.innerHTML = '<p>Loading...</p>';
+        
+        // Fetch movies for the selected category
+        const movies = await fetchMovies(`/titles/?sort_by=-imdb_score&genre=${category}`, 6);
+        
+        if (movies.length > 0) {
+            console.log(`Total ${category} movies fetched: ${movies.length}`);
+            
+            // Clear the grid
+            moviesGrid.innerHTML = '';
+            
+            // Add each movie to the grid
+            movies.forEach(movie => {
+                const article = document.createElement('article');
+                article.innerHTML = `
+                    <img src="${movie.image_url}" alt="${movie.title}" onerror="this.src='nopic.png';">
+                    <h3>${movie.title}</h3>
+                    <button onclick="showMovieDetails(${movie.id})">Détails</button>
+                `;
+                moviesGrid.appendChild(article);
+            });
+            
+            // Reset the "Voir plus" state
+            moviesGrid.classList.remove('show-all-movies');
+            const voirPlusBtn = categorySection.querySelector('.voir-plus-btn');
+            if (voirPlusBtn) {
+                voirPlusBtn.textContent = 'Voir plus';
+            }
+            
+            // Debug information
+            console.log(`Displaying ${movies.length} movies in the ${category} category`);
+        } else {
+            moviesGrid.innerHTML = `<p>No ${category} movies found.</p>`;
+            console.warn(`No ${category} movies returned from API`);
+        }
+    } catch (error) {
+        console.error(`Error fetching ${category} movies:`, error);
+    }
+}
+
+// Helper function to get a display name for each category
+function getCategoryDisplayName(category) {
+    const categoryNames = {
+        'action': 'Films d\'action',
+        'comedy': 'Comédies',
+        'family': 'Famille',
+        'fantasy': 'Films de fantasy',
+        'horror': 'Films d\'horreur',
+        'scifi': 'Science-fiction',
+        'western': 'Westerns'
+    };
+    
+    return categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
 }
